@@ -1,0 +1,265 @@
+//
+
+//  ViewController.h
+
+//  CoreMotion
+
+//
+
+//  Created by Sábado on 25/10/14.
+
+//  Copyright (c) 2014 RUI TOLEDO. All rights reserved.
+
+//
+
+ 
+
+#import <UIKit/UIKit.h>
+
+ 
+
+// Incluindo o framework ao documento
+
+#import <CoreMotion/CoreMotion.h>
+
+ 
+
+ 
+
+@interface ViewController : UIViewController
+
+ 
+
+// Criando um objeto da classe que gerencia o acesso aos sensores
+
+@property(nonatomic, strong) CMMotionManager *gerenciadorDosSensores;
+
+ 
+
+ 
+
+ 
+
+@property (weak, nonatomic) IBOutletUILabel *labelX;
+
+ 
+
+@property (weak, nonatomic) IBOutletUILabel *labelY;
+
+ 
+
+@property (weak, nonatomic) IBOutletUILabel *labelZ;
+
+ 
+
+ 
+
+@property (weak, nonatomic) IBOutletUILabel *labelRow;
+
+ 
+
+@property (weak, nonatomic) IBOutletUILabel *labelYaw;
+
+ 
+
+@property (weak, nonatomic) IBOutletUILabel *labelPitch;
+
+ 
+
+ 
+
+@property (weak, nonatomic) IBOutletUIProgressView *progressX;
+
+ 
+
+@property (weak, nonatomic) IBOutlet UIProgressView *progressY;
+
+ 
+
+@property (weak, nonatomic) IBOutlet UIProgressView *progressZ;
+
+ 
+
+ 
+
+@property (weak, nonatomic) IBOutlet UIProgressView *progressRoll;
+
+ 
+
+@property (weak, nonatomic) IBOutlet UIProgressView *progressYaw;
+
+ 
+
+@property (weak, nonatomic) IBOutlet UIProgressView *progressPitch;
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+@end
+
+ 
+
+//
+
+//  ViewController.m
+
+//  CoreMotion
+
+//
+
+//  Created by Sábado on 25/10/14.
+
+//  Copyright (c) 2014 RUI TOLEDO. All rights reserved.
+
+//
+
+ 
+
+#import "ViewController.h"
+
+ 
+
+@interfaceViewController ()
+
+ 
+
+@end
+
+ 
+
+@implementation ViewController
+
+ 
+
+- (void)viewDidLoad
+
+{
+
+    [superviewDidLoad];
+
+// Do any additional setup after loading the view, typically from a nib.
+
+    
+
+    // Alocando e iniciando o objeto que acessa os sensores
+
+    self.gerenciadorDosSensores = [[CMMotionManageralloc]init];
+
+    
+
+    // Ligando o acesso aos sensores
+
+    [self.gerenciadorDosSensoresstartDeviceMotionUpdates];
+
+    
+
+    
+
+    // Bloco que atualiza quando o device ativa seus movimentos
+
+    [self.gerenciadorDosSensoresstartGyroUpdatesToQueue:[NSOperationQueuecurrentQueue] withHandler:^(CMGyroData *gyroData, NSError *error)
+
+    {
+
+        
+
+        // Criando um objeto que concentre os dados dos sensores
+
+        CMDeviceMotion *sensores = self.gerenciadorDosSensores.deviceMotion;
+
+        
+
+        // Criando um objeto para receber os dados do acelerometro
+
+        CMAcceleration aceleracoes = sensores.userAcceleration;
+
+        
+
+        // Exibindo os dados nas respectivas labels e progressViews em nossa interface
+
+        self.labelX.text=[NSString stringWithFormat:@"%f", aceleracoes.x];
+
+        self.labelY.text=[NSString stringWithFormat:@"%f", aceleracoes.y];
+
+        self.labelZ.text=[NSString stringWithFormat:@"%f", aceleracoes.z];
+
+        
+
+        self.progressX.progress=aceleracoes.x;
+
+        self.progressY.progress=aceleracoes.y;
+
+        self.progressZ.progress=aceleracoes.z;
+
+ 
+
+        
+
+        // Acessando os sensores de gravidade
+
+        CMAttitude *gravidade = sensores.attitude;
+
+        
+
+        // Exibindo os dados nas respectivas labels e progressViews em nossa interface
+
+        
+
+        self.labelRow.text=[NSString stringWithFormat:@"%f", gravidade.roll];
+
+        self.labelYaw.text=[NSString stringWithFormat:@"%f", gravidade.yaw];
+
+        self.labelPitch.text=[NSString stringWithFormat:@"%f", gravidade.pitch];
+
+        
+
+        self.progressRoll.progress=gravidade.roll;
+
+        self.progressYaw.progress=gravidade.yaw;
+
+        self.progressPitch.progress=gravidade.pitch;
+
+        
+
+        
+
+        
+
+    }];
+
+    
+
+    
+
+    
+
+}
+
+ 
+
+- (void)didReceiveMemoryWarning
+
+{
+
+    [superdidReceiveMemoryWarning];
+
+    // Dispose of any resources that can be recreated.
+
+}
+
+ 
+
+ 
+
+@end
